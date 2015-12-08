@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <SystemConfiguration/SystemConfiguration.h>
 @interface ViewController : UIViewController
 
 
