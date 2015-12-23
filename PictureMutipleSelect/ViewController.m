@@ -58,21 +58,29 @@
 }
 - (void)createPicker
 {
-    UIActionSheet *sheet=[[UIActionSheet alloc] initWithTitle:@"请选取" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"拍摄" otherButtonTitles:@"照片库",@"照片多选", nil];
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: nil                                                                             message: nil                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
+    //添加Button
+    [alertController addAction: [UIAlertAction actionWithTitle: @"拍照" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //处理点击拍照
+        [self alertActionWithIndex:0];
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"从相册选取" style: UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        //处理点击从相册选取
+        [self alertActionWithIndex:1];
+    }]];
+    [alertController addAction: [UIAlertAction actionWithTitle: @"取消" style: UIAlertActionStyleCancel handler:nil]];
     
-    [sheet showInView:self.view];
-    
+    [self presentViewController: alertController animated: YES completion: nil];
 }
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+- (void)alertActionWithIndex:(NSInteger)buttonIndex
+{
     
     CorePhotoPickerVCMangerType type=0;
     
     
     if(buttonIndex==0) type=CorePhotoPickerVCMangerTypeCamera;
     
-    if(buttonIndex==1) type=CorePhotoPickerVCMangerTypeSinglePhoto;
-    
-    if(buttonIndex==2) type=CorePhotoPickerVCMangerTypeMultiPhoto;
+    if(buttonIndex==1) type=CorePhotoPickerVCMangerTypeMultiPhoto;
     
     CorePhotoPickerVCManager *manager=[CorePhotoPickerVCManager sharedCorePhotoPickerVCManager];
     
@@ -80,7 +88,7 @@
     manager.pickerVCManagerType=type;
     
     //最多可选3张
-    //    manager.maxSelectedPhotoNumber=3;
+    manager.maxSelectedPhotoNumber=5;
     
     //错误处理
     if(manager.unavailableType!=CorePhotoPickerUnavailableTypeNone){
@@ -98,11 +106,11 @@
             UIImage *userImage = photo.editedImage;
             [imageArr addObject:userImage];
             [self scrollViewAddPictureAndBooL:YES];
+
         }];
     };
     
     [self presentViewController:pickerVC animated:YES completion:nil];
-    
     
 }
 
@@ -183,6 +191,7 @@
 - (void)sendImageAction
 {
 
+    NSLog(@"点击了发送按钮");
     /*sendImage里面就是要发送的图片，代码类似我的github   https://github.com/tuwanli/PictureHead
      里面的头像上传两种方法，遍历这个数组即可
      */
@@ -198,11 +207,7 @@
     NSLog(@"%@",NSStringFromCGSize(scaledImage.size));
     return scaledImage;
 }
-- (void)sendImage
-{
 
-    
-}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
